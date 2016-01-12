@@ -14,8 +14,7 @@ import java.util.Scanner;
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 
-public class SeamCarving
-{
+public class SeamCarving {
 
    public static int[][] readpgm(String fn)
 	 {		

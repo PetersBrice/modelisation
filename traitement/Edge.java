@@ -1,10 +1,11 @@
 package modelisation.traitement;
 
-class Edge
-{
+class Edge {
+	
    int from;
    int to;
    int cost;
+   
    Edge(int x, int y, int cost)
 	 {
 		this.from = x;

@@ -1,7 +1,7 @@
 package modelisation.traitement;
 
-class Heap
-{
+class Heap {
+	
    int cor[];
    int item[];
    int heap[];

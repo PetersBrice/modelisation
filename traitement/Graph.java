@@ -3,17 +3,19 @@ package modelisation.traitement;
 import java.util.ArrayList;
 import java.io.*;
 
-public class Graph
-{
+public class Graph {
+	
    private ArrayList<Edge>[] adj;
    private final int V;
    int E;
-@SuppressWarnings("unchecked")
+   
+   @SuppressWarnings("unchecked")
+   
    public Graph(int N)
 	 {
 		this.V = N;
 		this.E = 0;
-		 adj = (ArrayList<Edge>[]) new ArrayList[N];
+		this.adj = (ArrayList<Edge>[]) new ArrayList[N];
 		for (int v= 0; v < N; v++)
 		  adj[v] = new ArrayList<Edge>();
 		
@@ -57,6 +59,49 @@ public class Graph
         return list;
     }
    
+   
+   static public Graph tograph(int[][] itr){
+	   int largeur = itr.length;
+	   int hauteur = itr[0].length;
+	   
+	   int tailleG = (largeur * hauteur) + 2;
+	   
+	   Graph g = new Graph(tailleG); //creation d'un graphe de taille (hauteur * largeur) + 2
+	   
+	   /* Le E num tailleG - 2 est le premier E, et le E num tailleG - 1 est le dernier E */
+	   
+	   //initialisation des premiers V de cout 0 partant du premier E vers les E de la premiere ligne de itr
+	   for (int i = 0; i < largeur; i++){
+		   g.addEdge(new Edge(tailleG - 2, i, 0));
+	   }
+	   
+	   //creation des V partant des (hauteur) lignes de itr
+	   for (int h = 0; h < hauteur; h++){
+		   for (int l = 0; l < largeur; l++){
+			   
+			   int posAct = (hauteur * h) + l; //num de E depuis lequel les V partent
+			   int coutAct = itr[l][h]; //cout des V
+			   
+			   if (h == hauteur - 1){ //cas dernière ligne (Les E n'ont qu'un seul V)
+				   g.addEdge(new Edge(posAct, tailleG - 1, itr[l][h]));
+			   } else {
+				   if (l == 0){						//cas premiere colonne (Les E n'ont que 2 V)
+					   g.addEdge(new Edge(posAct, posAct + hauteur, coutAct));		//E "juste en dessous"
+					   g.addEdge(new Edge(posAct, posAct + hauteur + 1, coutAct));	//E à "droite" du precedent
+				   } else if (l == largeur - 1){ 	//cas derniere colonne (Les E n'ont que 2 V)
+					   g.addEdge(new Edge(posAct, posAct + hauteur, coutAct));		//E "juste en dessous"
+					   
+				   } else {							//les E ont 3 V
+					   g.addEdge(new Edge(posAct, posAct + hauteur, coutAct));		//E "juste en dessous"
+					   g.addEdge(new Edge(posAct, posAct + hauteur + 1, coutAct));	//E à "droite" du precedent
+					   g.addEdge(new Edge(posAct, posAct + hauteur - 1, coutAct));	//E à "gauche" du premier
+				   }
+			   }
+		   }
+	   }
+	   
+	   return g;
+   }
    
    public void writeFile(String s)
 	 {
