@@ -1,3 +1,5 @@
+package modelisation.traitement;
+
 class Test
 {
    static boolean visite[];
