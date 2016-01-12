@@ -59,7 +59,11 @@ class Test
    
    public static void main(String[] args)
 	 {
-		testHeap();
-		testGraph();
+		//testHeap();
+		//testGraph();
+	   int[][] tab;
+	   SeamCarving sm = new SeamCarving();
+	   tab = sm.readpgm("test.pgm");
+	   sm.writepgm(tab, "lol.pgm");
 	 }
 }
