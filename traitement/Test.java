@@ -1,7 +1,7 @@
 package modelisation.traitement;
 
-class Test
-{
+class Test {
+	
    static boolean visite[];
    public static void dfs(Graph g, int u)
 	 {

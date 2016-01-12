@@ -4,8 +4,7 @@ import java.util.ArrayList;
 import java.io.*;
 import java.util.*;
 
-public class SeamCarving
-{
+public class SeamCarving {
 
    public static int[][] readpgm(String fn)
 	 {		
