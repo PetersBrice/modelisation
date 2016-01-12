@@ -1,3 +1,5 @@
+package modelisation.traitement;
+
 import java.util.ArrayList;
 import java.io.*;
 
