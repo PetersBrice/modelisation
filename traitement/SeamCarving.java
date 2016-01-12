@@ -3,6 +3,7 @@ package modelisation.traitement;
 import java.util.ArrayList;
 import java.io.*;
 import java.util.*;
+
 public class SeamCarving
 {
 
