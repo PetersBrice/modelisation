@@ -33,7 +33,6 @@ public class SeamCarving {
 		   line = d.readLine();
 		   s = new Scanner(line);
 		   int maxVal = s.nextInt();
-		   System.out.println(line);
 		   int[][] im = new int[height][width];
 		   s = new Scanner(d);
 		   int count = 0;
@@ -60,7 +59,6 @@ public class SeamCarving {
 		  bf.write("\n255\n");
 		  for(int i = 0;i < image.length;i++){
 			  for(int j = 0;j < image[i].length;j++){
-				  System.out.println(image[i][j]+" ");
 				  bf.write(image[i][j]+" ");
 			  }
 			  bf.write("\n");
@@ -72,7 +70,36 @@ public class SeamCarving {
 		  System.out.print("Erreur : ");
 		  ioe.printStackTrace();
 	  }		
-   }	
+   }
+   
+   public int[][] interest(int[][] image){
+	   int moyenne;
+	   int interestVal;
+	   int length = image.length;
+	   int width = image[0].length;
+	   int[][] interest = new int[length][width];
+	   
+	   //on remplie le tableau
+	   for(int i = 0; i < length;i++){
+		   for(int j = 0; j < width;j++){
+			   //si on est en fin de ligne
+			   if(j == width-1){
+				  interestVal = Math.abs(image[i][j]-image[i][j-1]);
+			   }else{
+				   //si on est en debut de ligne
+				   if(j==0){
+					   interestVal = Math.abs(image[i][j]-image[i][j+1]);
+				   }else{
+					   moyenne = (image[i][j-1]+image[i][j+1])/2;
+					   interestVal = Math.abs(image[i][j]-moyenne);
+				   }
+			   }
+			   
+			   interest[i][j] = interestVal;
+		   }
+	   }
+	   return interest;
+   }
 	   
 }
 

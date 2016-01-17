@@ -62,8 +62,27 @@ class Test {
 		//testHeap();
 		//testGraph();
 	   int[][] tab;
+	   int[][] interest;
+	   StringBuilder sb = new StringBuilder();
 	   SeamCarving sm = new SeamCarving();
 	   tab = sm.readpgm("test.pgm");
+	   for(int i =0; i < tab.length;i++){
+		   for(int j = 0;j<tab[i].length;j++){
+			   sb.append(""+tab[i][j]+" ");
+		   }   
+		   sb.append("\n");
+	   }
+	   interest = sm.interest(tab);
+	   StringBuilder si = new StringBuilder();
+	   for(int i =0; i < interest.length;i++){
+		   for(int j = 0;j<interest[i].length;j++){
+			   si.append(""+interest[i][j]+" ");
+		   }   
+		   si.append("\n");
+	   }
+	   
+	   System.out.println(sb);
+	   System.out.println(si);
 	   sm.writepgm(tab, "lol.pgm");
 	 }
 }
