@@ -83,6 +83,10 @@ class Test {
 	   
 	   System.out.println(sb);
 	   System.out.println(si);
+	   Graph TestGraph = Graph.tograph(interest);
+	   TestGraph.writeFile("test.txt");
+	   
+	   
 	   sm.writepgm(tab, "lol.pgm");
 	 }
 }

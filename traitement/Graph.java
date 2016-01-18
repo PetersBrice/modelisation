@@ -61,8 +61,8 @@ public class Graph {
    
    
    static public Graph tograph(int[][] itr){
-	   int largeur = itr.length;
-	   int hauteur = itr[0].length;
+	   int hauteur = itr.length;
+	   int largeur = itr[0].length;
 	   
 	   int tailleG = (largeur * hauteur) + 2;
 	   
@@ -79,22 +79,22 @@ public class Graph {
 	   for (int h = 0; h < hauteur; h++){
 		   for (int l = 0; l < largeur; l++){
 			   
-			   int posAct = (hauteur * h) + l; //num de E depuis lequel les V partent
-			   int coutAct = itr[l][h]; //cout des V
-			   
+			   int posAct = (largeur * h) + l; //num de E depuis lequel les V partent
+			   int coutAct = itr[h][l]; //cout des V
 			   if (h == hauteur - 1){ //cas dernière ligne (Les E n'ont qu'un seul V)
-				   g.addEdge(new Edge(posAct, tailleG - 1, itr[l][h]));
+				   g.addEdge(new Edge(posAct, tailleG - 1, itr[h][l]));
 			   } else {
 				   if (l == 0){						//cas premiere colonne (Les E n'ont que 2 V)
-					   g.addEdge(new Edge(posAct, posAct + hauteur, coutAct));		//E "juste en dessous"
-					   g.addEdge(new Edge(posAct, posAct + hauteur + 1, coutAct));	//E à "droite" du precedent
+					 
+					   g.addEdge(new Edge(posAct, posAct + largeur, coutAct));		//E "juste en dessous"
+					   g.addEdge(new Edge(posAct, posAct + largeur + 1, coutAct));	//E à "droite" du precedent
 				   } else if (l == largeur - 1){ 	//cas derniere colonne (Les E n'ont que 2 V)
-					   g.addEdge(new Edge(posAct, posAct + hauteur, coutAct));		//E "juste en dessous"
-					   
+					   g.addEdge(new Edge(posAct, posAct + largeur, coutAct));		//E "juste en dessous"
+					   g.addEdge(new Edge(posAct, posAct + largeur - 1, coutAct));	//E à "gauche" du premier
 				   } else {							//les E ont 3 V
-					   g.addEdge(new Edge(posAct, posAct + hauteur, coutAct));		//E "juste en dessous"
-					   g.addEdge(new Edge(posAct, posAct + hauteur + 1, coutAct));	//E à "droite" du precedent
-					   g.addEdge(new Edge(posAct, posAct + hauteur - 1, coutAct));	//E à "gauche" du premier
+					   g.addEdge(new Edge(posAct, posAct + largeur, coutAct));		//E "juste en dessous"
+					   g.addEdge(new Edge(posAct, posAct + largeur + 1, coutAct));	//E à "droite" du precedent
+					   g.addEdge(new Edge(posAct, posAct + largeur - 1, coutAct));	//E à "gauche" du premier
 				   }
 			   }
 		   }
@@ -116,6 +116,7 @@ public class Graph {
 		  }
 		catch (IOException e)
 		  {
+			e.printStackTrace();
 		  }						
 	 }
    
