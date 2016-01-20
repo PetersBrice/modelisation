@@ -64,15 +64,14 @@ class Test {
 	   int[][] tab;
 	   int[][] interest;
 	   StringBuilder sb = new StringBuilder();
-	   SeamCarving sm = new SeamCarving();
-	   tab = sm.readpgm("test.pgm");
+	   tab = SeamCarving.readpgm("test.pgm");
 	   for(int i =0; i < tab.length;i++){
 		   for(int j = 0;j<tab[i].length;j++){
 			   sb.append(""+tab[i][j]+" ");
 		   }   
 		   sb.append("\n");
 	   }
-	   interest = sm.interest(tab);
+	   interest = SeamCarving.interest(tab);
 	   StringBuilder si = new StringBuilder();
 	   for(int i =0; i < interest.length;i++){
 		   for(int j = 0;j<interest[i].length;j++){
@@ -87,6 +86,6 @@ class Test {
 	   TestGraph.writeFile("test.txt");
 	   
 	   
-	   sm.writepgm(tab, "lol.pgm");
+	   SeamCarving.writepgm(tab, "lol.pgm");
 	 }
 }

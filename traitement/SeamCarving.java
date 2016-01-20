@@ -1,18 +1,14 @@
 package modelisation.traitement;
 
-import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Scanner;
-
-import javax.imageio.ImageIO;
-import javax.swing.JOptionPane;
 
 public class SeamCarving {
 
@@ -49,7 +45,7 @@ public class SeamCarving {
         }
     }
    
-   public void writepgm(int[][] image, String filename){
+   public static void writepgm(int[][] image, String filename){
 	  try{
 		  File f = new File(filename);
 		  FileWriter fw = new FileWriter(f);
@@ -72,7 +68,7 @@ public class SeamCarving {
 	  }		
    }
    
-   public int[][] interest(int[][] image){
+   public static int[][] interest(int[][] image){
 	   int moyenne;
 	   int interestVal;
 	   int length = image.length;
@@ -99,6 +95,44 @@ public class SeamCarving {
 		   }
 	   }
 	   return interest;
+   }
+   
+   public static void doYaTangs(String filename){
+	   int[][] tabOrigine = readpgm(filename);
+	   
+	   int hauteur = tabOrigine.length;
+	   int largeur = tabOrigine[0].length;
+	   
+	   Graph g = Graph.tograph(tabOrigine);
+	   
+	   int[][] tab = new int[hauteur][largeur - 1];
+	   
+	   ArrayList<Integer> ali = new ArrayList<>();
+	   
+	   //ali = Parcours.dijkstra;
+	   
+	   for (int h = 0; h < hauteur; h++){ 			//pour chaque ligne
+		   
+		   int l = 0;
+		   
+		   boolean fin = false;
+		   
+		   while (!fin){
+			   
+			   int posAct = (largeur * h) + l;
+			   
+			   if (ali.contains(posAct)){
+				   for (int nl = l + 1; nl < largeur; nl++)
+					   tab[h][nl - 1] = tabOrigine[h][nl];
+				   
+				   fin = true;
+			   } else {
+				   tab[h][l] = tabOrigine[h][l];
+			   }
+			   
+			   l++;
+		   }
+	   }
    }
 	   
 }
