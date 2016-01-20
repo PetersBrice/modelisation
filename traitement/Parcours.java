@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 public class Parcours {
 
+
 	public static ArrayList<Integer> dijkstra(Graph g,int s,int t){
 		int noeud;
 		ArrayList<Integer> chemin = new ArrayList<>();
@@ -38,7 +39,8 @@ public class Parcours {
 		chemin.add(noeud);
 		
 		return chemin;
-		
+
 	}
+	
 	
 }
