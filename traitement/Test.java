@@ -83,9 +83,10 @@ class Test {
 	   
 	   System.out.println(sb);
 	   System.out.println(si);
-	   Graph TestGraph = Graph.tograph(interest);
-	   TestGraph.writeFile("test.txt");
+	   Graph testGraph = Graph.tograph(interest);
+	   testGraph.writeFile("test.dot");
 	   
+	   System.out.println(Parcours.dijkstra(testGraph,12,13));
 	   
 	   sm.writepgm(tab, "lol.pgm");
 	 }

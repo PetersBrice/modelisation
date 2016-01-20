@@ -23,7 +23,7 @@ public class Graph {
 
    public int vertices()
 	 {
-		return V;
+		return getV();
 	 }
    
    public void addEdge(Edge e)
@@ -51,7 +51,7 @@ public class Graph {
    public Iterable<Edge> edges()
 	 {
 		ArrayList<Edge> list = new ArrayList<Edge>();
-        for (int v = 0; v < V; v++)
+        for (int v = 0; v < getV(); v++)
             for (Edge e : adj(v)) {
                 if (e.to != v)
                     list.add(e);
@@ -119,5 +119,9 @@ public class Graph {
 			e.printStackTrace();
 		  }						
 	 }
+
+public int getV() {
+	return V;
+}
    
 }
