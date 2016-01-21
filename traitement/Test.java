@@ -61,7 +61,7 @@ class Test {
 	 {
 		//testHeap();
 		//testGraph();
-	   int[][] tab;
+	   /*int[][] tab;
 	   int[][] interest;
 	   StringBuilder sb = new StringBuilder();
 	   tab = SeamCarving.readpgm("test.pgm");
@@ -87,6 +87,8 @@ class Test {
 	   
 	   System.out.println(Parcours.dijkstra(testGraph,12,13));
 	   
-	   SeamCarving.writepgm(tab, "lol.pgm");
+	   SeamCarving.writepgm(tab, "lol.pgm");*/
+	   
+	   SeamCarving.mainActivity("modelisation/ex1.pgm", "wsh.pgm");
 	 }
 }

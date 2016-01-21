@@ -51,7 +51,7 @@ public class SeamCarving {
 		  FileWriter fw = new FileWriter(f);
 		  BufferedWriter bf = new BufferedWriter(fw);
 		  bf.write("P2\n");
-		  bf.write(image.length+" "+image[0].length);
+		  bf.write(image[0].length+" "+image.length);
 		  bf.write("\n255\n");
 		  for(int i = 0;i < image.length;i++){
 			  for(int j = 0;j < image[i].length;j++){
@@ -97,44 +97,59 @@ public class SeamCarving {
 	   return interest;
    }
    
-   public static void doYaTangs(String filename){
-	   int[][] tabOrigine = readpgm(filename);
+   public static void mainActivity(String filesourcename, String filedestname){
+	   int[][] tabOrigine = readpgm(filesourcename);
+	   int[][] tab = new int[1][1];
 	   
-	   int hauteur = tabOrigine.length;
-	   int largeur = tabOrigine[0].length;
-	   
-	   Graph g = Graph.tograph(tabOrigine);
-	   
-	   int[][] tab = new int[hauteur][largeur - 1];
-	   
-	   ArrayList<Integer> ali = new ArrayList<>();
-	   
-	   //ali = Parcours.dijkstra;
-	   
-	   for (int h = 0; h < hauteur; h++){ 			//pour chaque ligne
-		   
-		   int l = 0;
-		   
-		   boolean fin = false;
-		   
-		   while (!fin){
+	   for (int i = 0; i < 100; i++){
 			   
-			   int posAct = (largeur * h) + l;
+		   int hauteur = tabOrigine.length;
+		   int largeur = tabOrigine[0].length;
+		   
+		   Graph g = Graph.tograph(interest(tabOrigine)); 
+		   
+		   tab = new int[hauteur][largeur - 1];
+		   
+		   ArrayList<Integer> ali = new ArrayList<>();
+		   
+		   ali = Parcours.dijkstra(g, g.vertices() - 2, g.vertices() - 1);
+		   
+		   for (int h = 0; h < hauteur; h++){ 			//pour chaque ligne
 			   
-			   if (ali.contains(posAct)){
-				   for (int nl = l + 1; nl < largeur; nl++)
-					   tab[h][nl - 1] = tabOrigine[h][nl];
+			   int l = 0;
+			   
+			   boolean fin = false;
+			   
+			   while (!fin){
 				   
-				   fin = true;
-			   } else {
-				   tab[h][l] = tabOrigine[h][l];
+				   int posAct = (largeur * h) + l;
+				   
+				   if (ali.contains(posAct)){
+					   for (int nl = l + 1; nl < largeur; nl++)
+						   tab[h][nl - 1] = tabOrigine[h][nl];
+					   
+					   fin = true;
+				   } else {
+					   tab[h][l] = tabOrigine[h][l];
+				   }
+				   
+				   l++;
 			   }
-			   
-			   l++;
 		   }
+		   
+		   tabOrigine = tab;
+		   System.out.println("nn");
 	   }
+	   
+	   System.out.println("wi");
+	   writepgm(tab, filedestname);
    }
 	   
+   
+   
+   public static void main(String[] args){
+	   
+   }
 }
 
    
