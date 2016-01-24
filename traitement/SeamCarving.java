@@ -10,6 +10,8 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import modelisation.modele.Modele;
+
 public class SeamCarving {
 
    public static int[][] readpgm(String fn)
@@ -97,11 +99,11 @@ public class SeamCarving {
 	   return interest;
    }
    
-   public static void mainActivity(String filesourcename, String filedestname){
+   public static void mainActivity(String filesourcename, String filedestname, Modele m){
 	   int[][] tabOrigine = readpgm(filesourcename);
 	   int[][] tab = new int[1][1];
 	   
-	   for (int i = 0; i < 100; i++){
+	   for (int i = 0; i < 50; i++){
 			   
 		   int hauteur = tabOrigine.length;
 		   int largeur = tabOrigine[0].length;
@@ -138,10 +140,9 @@ public class SeamCarving {
 		   }
 		   
 		   tabOrigine = tab;
-		   System.out.println("nn");
+		   m.setProgress((i + 1) * 2);
 	   }
 	   
-	   System.out.println("wi");
 	   writepgm(tab, filedestname);
    }
 	   

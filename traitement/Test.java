@@ -89,6 +89,6 @@ class Test {
 	   
 	   SeamCarving.writepgm(tab, "lol.pgm");*/
 	   
-	   SeamCarving.mainActivity("modelisation/ex1.pgm", "wsh.pgm");
+	   //SeamCarving.mainActivity("modelisation/ex1.pgm", "wsh.pgm");
 	 }
 }
