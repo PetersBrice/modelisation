@@ -99,7 +99,7 @@ public class SeamCarving {
 	   return interest;
    }
    
-   public static void mainActivity(String filesourcename, String filedestname, Modele m){
+   public static void firstPartActivity(String filesourcename, Modele m){
 	   int[][] tabOrigine = readpgm(filesourcename);
 	   int[][] tab = new int[1][1];
 	   
@@ -143,10 +143,12 @@ public class SeamCarving {
 		   m.setProgress((i + 1) * 2);
 	   }
 	   
-	   writepgm(tab, filedestname);
+	   m.setTabFinal(tab);
    }
 	   
-   
+   public static void secondPartActivity(String filesourcename, Modele m){
+	   
+   }
    
    public static void main(String[] args){
 	   

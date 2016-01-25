@@ -1,22 +1,88 @@
 package modelisation.modele;
 
+import java.awt.BorderLayout;
 import java.io.File;
 import java.util.Observable;
 
 import javax.swing.JFrame;
 
+import modelisation.graphique.FileChoserPanneau;
 import modelisation.graphique.ProgressPanneau;
+import modelisation.graphique.RunPanneau;
 import modelisation.traitement.SeamCarving;
 
 public class Modele extends Observable {
 	
 	private int progression;
-	private File fileOrigin;
+	private int[][] tabFinal;
 	
+	private boolean taskFinished;
+	private boolean fileOriginChoosed;
+	
+	private String fileOriginAbsPath;
+	private String fileSaveAbsPath;
+	
+
 	public Modele(){
 		super();
 		
+		fileOriginAbsPath = null;
+		fileSaveAbsPath = null;
+		
 		progression = 0;
+		taskFinished = false;
+	}
+	
+	public void saveFile(){
+		SeamCarving.writepgm(tabFinal, fileSaveAbsPath);
+	}
+	
+	public void partOneActivity(){
+		SeamCarving.firstPartActivity(fileOriginAbsPath, this);
+	}
+	
+	public void partTwoActivity(){
+		SeamCarving.secondPartActivity(fileOriginAbsPath, this);
+	}
+	
+	public String getFileSave() {
+		return fileSaveAbsPath;
+	}
+
+	public void setFileSave(File fileSave) {
+		this.fileSaveAbsPath = fileSave.getAbsolutePath();
+		this.setChanged();
+		this.notifyObservers();
+	}
+	
+	public String getFileOrigin() {
+		return fileOriginAbsPath;
+	}
+
+	public void setFileOrigin(File fileOrigin) {
+		this.fileOriginAbsPath = fileOrigin.getAbsolutePath();
+		this.setChanged();
+		this.notifyObservers();
+	}
+	
+	public boolean isFileOriginChoosed() {
+		return fileOriginChoosed;
+	}
+
+	public void setFileOriginChoosed(boolean fileOriginChoosed) {
+		this.fileOriginChoosed = fileOriginChoosed;
+		this.setChanged();
+		this.notifyObservers();
+	}
+	
+	public boolean isTaskFinished(){
+		return taskFinished;
+	}
+	
+	public void setTaskFinished(boolean tf){
+		taskFinished = tf;
+		this.setChanged();
+		this.notifyObservers();
 	}
 	
 	public int getProgress(){
@@ -28,22 +94,31 @@ public class Modele extends Observable {
 		this.setChanged();
 		this.notifyObservers();
 	}
+	
+	public int[][] getTabFinal() {
+		return tabFinal;
+	}
 
+	public void setTabFinal(int[][] tabFinal) {
+		this.tabFinal = tabFinal;
+		this.setChanged();
+		this.notifyObservers();
+	}
+	
 	public static void main(String[] args) {
 		
 		JFrame jf = new JFrame("Projet Modelisation Peters-Debicki");
 		
 		Modele m = new Modele();
 		
-		jf.add(new ProgressPanneau(m));
+		jf.add(new ProgressPanneau(m), BorderLayout.SOUTH);
+		jf.add(new FileChoserPanneau(m), BorderLayout.NORTH);
+		jf.add(new RunPanneau(m), BorderLayout.CENTER);
 		
 		jf.pack();
 		jf.setVisible(true);
-		jf.setResizable(false);
 		jf.setLocationRelativeTo(null);
 		jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
-		SeamCarving.mainActivity("modelisation/ex1.pgm", "wsh.pgm", m);
 	}
 
 }
