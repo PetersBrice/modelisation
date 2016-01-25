@@ -3,6 +3,7 @@ package modelisation.traitement;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,8 +18,9 @@ public class SeamCarving {
    public static int[][] readpgm(String fn)
 	 {		
         try {
-            InputStream f = ClassLoader.getSystemClassLoader().getResourceAsStream(fn);
-            BufferedReader d = new BufferedReader(new InputStreamReader(f));
+        	System.out.println(fn);
+        	FileInputStream fis = new FileInputStream(fn);
+            BufferedReader d = new BufferedReader(new InputStreamReader(fis));
             String magic = d.readLine();
             String line = d.readLine();
             
@@ -103,6 +105,8 @@ public class SeamCarving {
 	   int[][] tabOrigine = readpgm(filesourcename);
 	   int[][] tab = new int[1][1];
 	   
+	   m.setTaskFinished(false);
+	   
 	   for (int i = 0; i < 50; i++){
 			   
 		   int hauteur = tabOrigine.length;
@@ -144,13 +148,10 @@ public class SeamCarving {
 	   }
 	   
 	   m.setTabFinal(tab);
+	   m.setTaskFinished(true);
    }
 	   
    public static void secondPartActivity(String filesourcename, Modele m){
-	   
-   }
-   
-   public static void main(String[] args){
 	   
    }
 }

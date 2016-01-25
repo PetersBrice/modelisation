@@ -11,10 +11,11 @@ import modelisation.graphique.ProgressPanneau;
 import modelisation.graphique.RunPanneau;
 import modelisation.traitement.SeamCarving;
 
-public class Modele extends Observable {
+public class Modele extends Observable implements Runnable{
 	
 	private int progression;
 	private int[][] tabFinal;
+	private int whichPart;
 	
 	private boolean taskFinished;
 	private boolean fileOriginChoosed;
@@ -30,7 +31,10 @@ public class Modele extends Observable {
 		fileSaveAbsPath = null;
 		
 		progression = 0;
+		whichPart = 0;
+		
 		taskFinished = false;
+		fileOriginChoosed = false;
 	}
 	
 	public void saveFile(){
@@ -38,13 +42,29 @@ public class Modele extends Observable {
 	}
 	
 	public void partOneActivity(){
-		SeamCarving.firstPartActivity(fileOriginAbsPath, this);
+		whichPart = 1;
+		Thread t = new Thread(this, "first");
+		t.start();
 	}
 	
 	public void partTwoActivity(){
-		SeamCarving.secondPartActivity(fileOriginAbsPath, this);
+		whichPart = 2;
+		Thread t = new Thread(this, "second");
+		t.start();
 	}
 	
+	@Override
+	public void run() {
+		switch (whichPart){
+		case 1:
+			SeamCarving.firstPartActivity(fileOriginAbsPath, this);
+			break;
+		case 2:
+			SeamCarving.secondPartActivity(fileOriginAbsPath, this);
+			break;
+		}
+	}
+
 	public String getFileSave() {
 		return fileSaveAbsPath;
 	}
@@ -121,4 +141,5 @@ public class Modele extends Observable {
 		jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 
+	
 }

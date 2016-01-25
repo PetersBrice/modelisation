@@ -66,10 +66,8 @@ public class FileChoserPanneau extends JPanel implements Observer{
 	public void update(Observable o, Object arg) {
 		if (mod.isTaskFinished()){
 			saveButton.setEnabled(true);
-			openButton.setEnabled(false);
 		} else {
 			saveButton.setEnabled(false);
-			openButton.setEnabled(true);
 		}
 		
 	}
