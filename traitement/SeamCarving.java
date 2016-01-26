@@ -148,7 +148,9 @@ public class SeamCarving {
 	   }
 	   
 	   m.setTabFinal(tab);
+	   
 	   m.setTaskFinished(true);
+	   m.setRunning(false);
    }
 	   
    public static void secondPartActivity(String filesourcename, Modele m){

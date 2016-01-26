@@ -17,6 +17,9 @@ public class Modele extends Observable implements Runnable{
 	private int[][] tabFinal;
 	private int whichPart;
 	
+	private boolean running;
+	
+
 	private boolean taskFinished;
 	private boolean fileOriginChoosed;
 	
@@ -45,12 +48,14 @@ public class Modele extends Observable implements Runnable{
 		whichPart = 1;
 		Thread t = new Thread(this, "first");
 		t.start();
+		setRunning(true);
 	}
 	
 	public void partTwoActivity(){
 		whichPart = 2;
 		Thread t = new Thread(this, "second");
 		t.start();
+		setRunning(true);
 	}
 	
 	@Override
@@ -101,6 +106,16 @@ public class Modele extends Observable implements Runnable{
 	
 	public void setTaskFinished(boolean tf){
 		taskFinished = tf;
+		this.setChanged();
+		this.notifyObservers();
+	}
+	
+	public boolean isRunning() {
+		return running;
+	}
+
+	public void setRunning(boolean running) {
+		this.running = running;
 		this.setChanged();
 		this.notifyObservers();
 	}
