@@ -140,21 +140,7 @@ public class Modele extends Observable implements Runnable{
 		this.notifyObservers();
 	}
 	
-	public static void main(String[] args) {
-		
-		JFrame jf = new JFrame("Projet Modelisation Peters-Debicki");
-		
-		Modele m = new Modele();
-		
-		jf.add(new ProgressPanneau(m), BorderLayout.SOUTH);
-		jf.add(new FileChoserPanneau(m), BorderLayout.NORTH);
-		jf.add(new RunPanneau(m), BorderLayout.CENTER);
-		
-		jf.pack();
-		jf.setVisible(true);
-		jf.setLocationRelativeTo(null);
-		jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	}
+	
 
 	
 }

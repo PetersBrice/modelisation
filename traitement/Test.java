@@ -1,5 +1,14 @@
 package modelisation.traitement;
 
+import java.awt.BorderLayout;
+
+import javax.swing.JFrame;
+
+import modelisation.graphique.FileChoserPanneau;
+import modelisation.graphique.ProgressPanneau;
+import modelisation.graphique.RunPanneau;
+import modelisation.modele.Modele;
+
 class Test {
 	
    static boolean visite[];
@@ -90,5 +99,36 @@ class Test {
 	   SeamCarving.writepgm(tab, "lol.pgm");*/
 	   
 	   //SeamCarving.mainActivity("modelisation/ex1.pgm", "wsh.pgm");
+
+
+		/*JFrame jf = new JFrame("Projet Modelisation Peters-Debicki");
+		
+		Modele m = new Modele();
+		
+		jf.add(new ProgressPanneau(m), BorderLayout.SOUTH);
+		jf.add(new FileChoserPanneau(m), BorderLayout.NORTH);
+		jf.add(new RunPanneau(m), BorderLayout.CENTER);
+		
+		jf.pack();
+		jf.setVisible(true);
+		jf.setLocationRelativeTo(null);
+		jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);*/
+	   
+	   int[][] tab;
+	   int[][] interest;
+	   tab = SeamCarving.readppm("test.ppm");
+	   StringBuilder sb = new StringBuilder();
+	   
+	   int [][]gris = SeamCarving.ppmToPgm(tab);
+	   for(int i =0; i < gris.length;i++){
+		   for(int j = 0;j<gris[i].length;j++){
+			   sb.append(""+gris[i][j]+" ");
+		   }   
+		   sb.append("\n");
+	   }
+	   System.out.println(sb.toString());
+	   SeamCarving.writeppm(tab, "lol.ppm");
 	 }
+   
+   
 }

@@ -49,6 +49,44 @@ public class SeamCarving {
         }
     }
    
+   public static int[][] readppm(String fn)
+	 {		
+      try {
+      	FileInputStream fis = new FileInputStream(fn);
+          BufferedReader d = new BufferedReader(new InputStreamReader(fis));
+          String magic = d.readLine();
+          String line = d.readLine();
+          System.out.println(magic);
+          
+		   while (line.startsWith("#")) {
+			  line = d.readLine();
+		   }
+		   Scanner s = new Scanner(line);
+		   int width = s.nextInt();
+		   int height = s.nextInt();		   
+		   line = d.readLine();
+		   s = new Scanner(line);
+		   int maxVal = s.nextInt();
+		   int[][] im = new int[height][width*3];
+		   s = new Scanner(d);
+		   int count = 0;
+		   System.out.println(width);
+		   System.out.println(height);
+		   while (count < height*width*3) {
+			  im[count / (width*3)][count % (width*3)] = s.nextInt();
+			  count++;
+		   }
+		   return im;
+      }
+		
+      catch(Throwable t) {
+          t.printStackTrace(System.err) ;
+          return null;
+      }
+  }
+   
+   
+   
    public static void writepgm(int[][] image, String filename){
 	  try{
 		  File f = new File(filename);
@@ -71,6 +109,29 @@ public class SeamCarving {
 		  ioe.printStackTrace();
 	  }		
    }
+   
+   public static void writeppm(int[][] image, String filename){
+		  try{
+			  File f = new File(filename);
+			  FileWriter fw = new FileWriter(f);
+			  BufferedWriter bf = new BufferedWriter(fw);
+			  bf.write("P3\n");
+			  bf.write(image[0].length/3+" "+image.length);
+			  bf.write("\n255\n");
+			  for(int i = 0;i < image.length;i++){
+				  for(int j = 0;j < image[i].length;j++){
+					  bf.write(image[i][j]+" ");
+				  }
+				  bf.write("\n");
+			  }
+			  bf.flush();
+			  bf.close();
+			  fw.close();
+		  }catch(IOException ioe){
+			  System.out.print("Erreur : ");
+			  ioe.printStackTrace();
+		  }		
+	   }
    
    public static int[][] interest(int[][] image){
 	   int moyenne;
@@ -153,6 +214,16 @@ public class SeamCarving {
 	   m.setRunning(false);
    }
 	   
+   public static int [][] ppmToPgm(int[][] color){
+	   int[][] gris = new int [color.length][color[0].length/3];
+	   for(int i = 0; i < gris.length;i++){
+		   for(int j = 0; j < gris[0].length;j++){
+			   gris[i][j] = (int) (0.2126 * color[i][j] + 0.7152 * color[i][j+1] + 0.0722 * color[i][j+2]);
+		   }
+	   }
+	return gris;
+	   
+   }
    public static void secondPartActivity(String filesourcename, Modele m){
 	   
    }
