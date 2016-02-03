@@ -103,6 +103,76 @@ public class Graph {
 	   return g;
    }
    
+   static public Graph tograph2(int[][] itr){
+	   int hauteur = itr.length;
+	   int largeur = itr[0].length;
+	   int posAct,coutAct;
+	   int h,l;
+	   
+	   int tailleG = (largeur * hauteur)*2 -(2 * largeur)  + 2;
+	   
+	   Graph g = new Graph(tailleG); //creation d'un graphe de taille (largeur * hauteur)*2 -(2 * largeur)  + 2;
+	   
+	   /* Le E num tailleG - 2 est le premier E, et le E num tailleG - 1 est le dernier E */
+	   
+	   //initialisation des premiers V de cout 0 partant du premier E vers les E de la premiere ligne de itr
+	   for (int i = 0; i < largeur; i++){
+		   g.addEdge(new Edge(tailleG - 2, i, 0));
+	   }
+	   
+	   /*premiere ligne*/
+	   h = 0;
+	   for (l = 0; l < largeur; l++){
+		   
+		   posAct = (largeur * h) + l; //num de E depuis lequel les V partent
+		   coutAct = itr[h][l]; //cout des V
+		  
+		   if (l == 0){						//cas premiere colonne (Les E n'ont que 2 V)		 
+			   g.addEdge(new Edge(posAct, posAct + largeur, coutAct));		//E "juste en dessous"
+			   g.addEdge(new Edge(posAct, posAct + largeur + 1, coutAct));	//E à "droite" du precedent
+		   } else if (l == largeur - 1){ 	//cas derniere colonne (Les E n'ont que 2 V)
+			   g.addEdge(new Edge(posAct, posAct + largeur, coutAct));		//E "juste en dessous"
+			   g.addEdge(new Edge(posAct, posAct + largeur - 1, coutAct));	//E à "gauche" du premier
+		   } else {							//les E ont 3 V
+			   g.addEdge(new Edge(posAct, posAct + largeur, coutAct));		//E "juste en dessous"
+			   g.addEdge(new Edge(posAct, posAct + largeur + 1, coutAct));	//E à "droite" du precedent
+			   g.addEdge(new Edge(posAct, posAct + largeur - 1, coutAct));	//E à "gauche" du premier
+		   }
+	   }
+	   
+	   //creation des V partant des (hauteur) lignes de itr
+	   for (h = 1; h < hauteur-1; h++){
+		   for (l = 0; l < largeur; l++){ 
+			   posAct = (largeur * (h-1)*2) +l+4; //num de E depuis lequel les V partent
+			   coutAct = itr[h][l]; //cout des V
+			   // on ajoute l'arrete qui descend directement a 0
+			   g.addEdge(new Edge(posAct,posAct+largeur,0));
+			   //on ecrit la ligne d'apret directement
+			   posAct = posAct+largeur;
+			   
+			   if (l == 0){						//cas premiere colonne (Les E n'ont que 2 V)
+				   g.addEdge(new Edge(posAct, posAct + largeur, coutAct));		//E "juste en dessous"
+				   g.addEdge(new Edge(posAct, posAct + largeur + 1, coutAct));	//E à "droite" du precedent
+			   } else if (l == largeur - 1){ 	//cas derniere colonne (Les E n'ont que 2 V)
+				   g.addEdge(new Edge(posAct, posAct + largeur, coutAct));		//E "juste en dessous"
+				   g.addEdge(new Edge(posAct, posAct + largeur - 1, coutAct));	//E à "gauche" du premier
+			   } else {							//les E ont 3 V
+				   g.addEdge(new Edge(posAct, posAct + largeur, coutAct));		//E "juste en dessous"
+				   g.addEdge(new Edge(posAct, posAct + largeur + 1, coutAct));	//E à "droite" du precedent
+				   g.addEdge(new Edge(posAct, posAct + largeur - 1, coutAct));	//E à "gauche" du premier
+			   }
+		   }
+	   }
+	   
+	   /*derniere ligne*/
+	   for (l = 0; l < largeur; l++){
+		   posAct = tailleG-largeur + l -2;
+		   g.addEdge(new Edge(posAct, tailleG - 1, itr[h][l]));
+	   }
+	   
+	   return g;
+   }
+   
    public void writeFile(String s)
 	 {
 		try

@@ -18,7 +18,6 @@ public class SeamCarving {
    public static int[][] readpgm(String fn)
 	 {		
         try {
-        	System.out.println(fn);
         	FileInputStream fis = new FileInputStream(fn);
             BufferedReader d = new BufferedReader(new InputStreamReader(fis));
             String magic = d.readLine();
@@ -56,7 +55,6 @@ public class SeamCarving {
           BufferedReader d = new BufferedReader(new InputStreamReader(fis));
           String magic = d.readLine();
           String line = d.readLine();
-          System.out.println(magic);
           
 		   while (line.startsWith("#")) {
 			  line = d.readLine();
@@ -70,8 +68,6 @@ public class SeamCarving {
 		   int[][] im = new int[height][width*3];
 		   s = new Scanner(d);
 		   int count = 0;
-		   System.out.println(width);
-		   System.out.println(height);
 		   while (count < height*width*3) {
 			  im[count / (width*3)][count % (width*3)] = s.nextInt();
 			  count++;
@@ -163,8 +159,17 @@ public class SeamCarving {
    }
    
    public static void firstPartActivity(String filesourcename, Modele m){
-	   int[][] tabOrigine = readpgm(filesourcename);
-	   int[][] tab = new int[1][1];
+	   
+	   boolean formatPPM = filesourcename.endsWith(".ppm");
+	   
+	   int[][] tabOrigine;
+	   
+	   if (formatPPM)
+		   tabOrigine = readppm(filesourcename);
+	   else
+		   tabOrigine = readpgm(filesourcename);
+	   
+	   int[][] tab;
 	   
 	   m.setTaskFinished(false);
 	   
@@ -173,9 +178,16 @@ public class SeamCarving {
 		   int hauteur = tabOrigine.length;
 		   int largeur = tabOrigine[0].length;
 		   
-		   Graph g = Graph.tograph(interest(tabOrigine)); 
+		   Graph g;
 		   
-		   tab = new int[hauteur][largeur - 1];
+		   if (formatPPM){
+			   int[][] gris = SeamCarving.ppmToPgm(tabOrigine);
+			   g = Graph.tograph(interest(gris));
+			   tab = new int[hauteur][largeur - 3];
+		   } else {
+			   g = Graph.tograph(interest(tabOrigine)); 
+			   tab = new int[hauteur][largeur - 1];
+		   }
 		   
 		   ArrayList<Integer> ali = new ArrayList<>();
 		   
@@ -188,12 +200,23 @@ public class SeamCarving {
 			   boolean fin = false;
 			   
 			   while (!fin){
+				    
+				   int posAct;
 				   
-				   int posAct = (largeur * h) + l;
+				   if (formatPPM)
+					   posAct = (largeur/3 * h) + l;
+				   else
+					   posAct = (largeur * h) + l;
 				   
 				   if (ali.contains(posAct)){
-					   for (int nl = l + 1; nl < largeur; nl++)
-						   tab[h][nl - 1] = tabOrigine[h][nl];
+					   
+					   if (formatPPM){
+						   for (int nl = l + 3; nl < largeur; nl++)
+							   tab[h][nl - 3] = tabOrigine[h][nl];
+					   } else {
+						   for (int nl = l + 1; nl < largeur; nl++)
+							   tab[h][nl - 1] = tabOrigine[h][nl];
+					   }
 					   
 					   fin = true;
 				   } else {
@@ -208,7 +231,7 @@ public class SeamCarving {
 		   m.setProgress((i + 1) * 2);
 	   }
 	   
-	   m.setTabFinal(tab);
+	   m.setTabFinal(tabOrigine);
 	   
 	   m.setTaskFinished(true);
 	   m.setRunning(false);
@@ -218,7 +241,8 @@ public class SeamCarving {
 	   int[][] gris = new int [color.length][color[0].length/3];
 	   for(int i = 0; i < gris.length;i++){
 		   for(int j = 0; j < gris[0].length;j++){
-			   gris[i][j] = (int) (0.2126 * color[i][j] + 0.7152 * color[i][j+1] + 0.0722 * color[i][j+2]);
+			   //gris[i][j] = (int) (0.2126 * (float)color[i][j] + 0.7152 * (float)color[i][j+1] + 0.0722 * (float)color[i][j+2]);
+			   gris[i][j] = (int) ((color[i][j] + color[i][j+1] + color[i][j+2]) / 3);
 		   }
 	   }
 	return gris;

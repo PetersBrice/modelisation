@@ -18,7 +18,6 @@ public class Modele extends Observable implements Runnable{
 	private int whichPart;
 	
 	private boolean running;
-	
 
 	private boolean taskFinished;
 	private boolean fileOriginChoosed;
@@ -41,7 +40,10 @@ public class Modele extends Observable implements Runnable{
 	}
 	
 	public void saveFile(){
-		SeamCarving.writepgm(tabFinal, fileSaveAbsPath);
+		if (fileSaveAbsPath.endsWith(".ppm"))
+			SeamCarving.writeppm(tabFinal, fileSaveAbsPath);
+		else 
+			SeamCarving.writepgm(tabFinal, fileSaveAbsPath);
 	}
 	
 	public void partOneActivity(){

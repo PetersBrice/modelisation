@@ -1,6 +1,7 @@
 package modelisation.traitement;
 
 import java.awt.BorderLayout;
+import java.util.ArrayList;
 
 import javax.swing.JFrame;
 
@@ -112,22 +113,64 @@ class Test {
 		jf.pack();
 		jf.setVisible(true);
 		jf.setLocationRelativeTo(null);
-		jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);*/
-	   
+		jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	   */
+		
 	   int[][] tab;
 	   int[][] interest;
-	   tab = SeamCarving.readppm("test.ppm");
+	   tab = SeamCarving.readpgm("test.pgm");
 	   StringBuilder sb = new StringBuilder();
-	   
-	   int [][]gris = SeamCarving.ppmToPgm(tab);
-	   for(int i =0; i < gris.length;i++){
+	   StringBuilder si = new StringBuilder();
+	   interest = SeamCarving.interest(tab);
+	   Graph testGraph = Graph.tograph2(interest);
+	   testGraph.writeFile("test2.dot");
+	   /*for(int i =0; i < gris.length;i++){
 		   for(int j = 0;j<gris[i].length;j++){
 			   sb.append(""+gris[i][j]+" ");
 		   }   
 		   sb.append("\n");
 	   }
-	   System.out.println(sb.toString());
-	   SeamCarving.writeppm(tab, "lol.ppm");
+	   for(int i =0; i < interest.length;i++){
+		   for(int j = 0;j<interest[i].length;j++){
+			   si.append(""+interest[i][j]+" ");
+		   }   
+		   si.append("\n");
+	   }
+	   
+	   ArrayList<Integer> ali = new ArrayList<>();
+	   
+	   ali = Parcours.dijkstra(testGraph, testGraph.vertices() - 2, testGraph.vertices() - 1);
+	   int hauteur = tab.length;
+	   int largeur = tab[0].length ;
+	   int [][]ntab=  new int [hauteur][largeur - 3];
+	   
+	   System.out.println("hauteur: "+hauteur);
+	   System.out.println("largeur: "+largeur);
+	   System.out.println(ali);
+	   
+	   for (int h = 0; h < hauteur; h++){ 			//pour chaque ligne
+		   
+		   int l = 0;
+		   
+		   boolean fin = false;
+		   
+		   while (!fin){
+			   
+			   int posAct = (largeur/3 * h) + l;
+			   
+			   if (ali.contains(posAct)){
+				   System.out.println(posAct);
+				   for (int nl = l + 3; nl < largeur; nl++)
+					   ntab[h][nl - 3] = tab[h][nl];
+				   fin = true;
+			   } else {
+				   ntab[h][l] = tab[h][l];
+			   }
+			   
+			   l++;
+		   }
+	   }
+	   SeamCarving.writeppm(ntab, "lol.ppm");*/
 	 }
    
    
