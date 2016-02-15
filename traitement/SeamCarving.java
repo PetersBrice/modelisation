@@ -6,7 +6,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -161,6 +160,7 @@ public class SeamCarving {
    public static void firstPartActivity(String filesourcename, Modele m){
 	   
 	   boolean formatPPM = filesourcename.endsWith(".ppm");
+	   boolean addligne = true;
 	   
 	   int[][] tabOrigine;
 	   
@@ -180,13 +180,24 @@ public class SeamCarving {
 		   
 		   Graph g;
 		   
-		   if (formatPPM){
-			   int[][] gris = SeamCarving.ppmToPgm(tabOrigine);
-			   g = Graph.tograph(interest(gris));
-			   tab = new int[hauteur][largeur - 3];
-		   } else {
-			   g = Graph.tograph(interest(tabOrigine)); 
-			   tab = new int[hauteur][largeur - 1];
+		   if(!addligne){
+			   if (formatPPM){
+				   int[][] gris = SeamCarving.ppmToPgm(tabOrigine);
+				   g = Graph.tograph(interest(gris));
+				   tab = new int[hauteur][largeur - 3];
+			   } else {
+				   g = Graph.tograph(interest(tabOrigine)); 
+				   tab = new int[hauteur][largeur - 1];
+			   }
+		   }else{
+			   if (formatPPM){
+				   int[][] gris = SeamCarving.ppmToPgm(tabOrigine);
+				   g = Graph.tograph(interest(gris));
+				   tab = new int[hauteur][largeur + 3];
+			   } else {
+				   g = Graph.tograph(interest(tabOrigine)); 
+				   tab = new int[hauteur][largeur + 1];
+			   }
 		   }
 		   
 		   ArrayList<Integer> ali = new ArrayList<>();
@@ -211,11 +222,29 @@ public class SeamCarving {
 				   if (ali.contains(posAct)){
 					   
 					   if (formatPPM){
+						   if(addligne){
+							 for(int j =0; j < 3; j ++){
+								 tab[h][l+j]= (int) Math.round(tabOrigine[h][l-3+j]*0.25+0.75*tabOrigine[h][l+3+j]);
+								 tab[h][l+3+j]= (int) Math.round(tabOrigine[h][l-3+j]*0.75+0.25*tabOrigine[h][l+3+j]);
+							 }
+							   for (int nl = l + 9; nl < largeur; nl++)
+								   tab[h][nl - 3] = tabOrigine[h][nl];
+						   }else{
 						   for (int nl = l + 3; nl < largeur; nl++)
 							   tab[h][nl - 3] = tabOrigine[h][nl];
+						   }
 					   } else {
-						   for (int nl = l + 1; nl < largeur; nl++)
-							   tab[h][nl - 1] = tabOrigine[h][nl];
+						   if(addligne){
+							   tab[h][l] = (int) Math.round(tabOrigine[h][l-1]*0.25+0.75*tabOrigine[h][l+1]);
+							   tab[h][l+1] = (int) Math.round(tabOrigine[h][l-1]*0.75+0.25*tabOrigine[h][l+1]);
+							   for (int nl = l + 3; nl < largeur; nl++){
+								   tab[h][nl - 1] = tabOrigine[h][nl];
+							   }
+						   }else{
+							   for (int nl = l + 1; nl < largeur; nl++){
+								   tab[h][nl - 1] = tabOrigine[h][nl];
+							}  
+						   }
 					   }
 					   
 					   fin = true;
