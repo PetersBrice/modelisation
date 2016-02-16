@@ -6,7 +6,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -184,6 +183,116 @@ public class SeamCarving implements Runnable {
 	   return interest;
    }
    
+public static void voilaPourquoiJeVoulaisRefaireSeamCarvingEtQueTuFassePlusRien(String filesourcename, Modele m){
+	   
+	   boolean formatPPM = filesourcename.endsWith(".ppm");
+	   boolean addligne = true;
+	   
+	   int[][] tabOrigine;
+	   
+	   if (formatPPM)
+		   tabOrigine = readppm(filesourcename);
+	   else
+		   tabOrigine = readpgm(filesourcename);
+	   
+	   int[][] tab;
+	   
+	   m.setTaskFinished(false);
+	   
+	   for (int i = 0; i < 50; i++){
+			   
+		   int hauteur = tabOrigine.length;
+		   int largeur = tabOrigine[0].length;
+		   
+		   Graph g;
+		   
+		   if(!addligne){
+			   if (formatPPM){
+				   int[][] gris = SeamCarving.ppmToPgm(tabOrigine);
+				   g = Graph.tograph(interest(gris));
+				   tab = new int[hauteur][largeur - 3];
+			   } else {
+				   g = Graph.tograph(interest(tabOrigine)); 
+				   tab = new int[hauteur][largeur - 1];
+			   }
+		   }else{
+			   if (formatPPM){
+				   int[][] gris = SeamCarving.ppmToPgm(tabOrigine);
+				   g = Graph.tograph(interest(gris));
+				   tab = new int[hauteur][largeur + 3];
+			   } else {
+				   g = Graph.tograph(interest(tabOrigine)); 
+				   tab = new int[hauteur][largeur + 1];
+			   }
+		   }
+		   
+		   ArrayList<Integer> ali = new ArrayList<>();
+		   
+		   ali = Parcours.dijkstra(g, g.vertices() - 2, g.vertices() - 1);
+		   
+		   for (int h = 0; h < hauteur; h++){ 			//pour chaque ligne
+			   
+			   int l = 0;
+			   
+			   boolean fin = false;
+			   
+			   while (!fin){
+				    
+				   int posAct;
+				   
+				   if (formatPPM)
+					   posAct = (largeur/3 * h) + l;
+				   else
+					   posAct = (largeur * h) + l;
+				   
+				   if (ali.contains(posAct)){
+					   
+					   if (formatPPM){
+						   if(addligne){
+							 for(int j =0; j < 3; j ++){
+								 tab[h][l+j]= (int) Math.round(tabOrigine[h][l-3+j]*0.25+0.75*tabOrigine[h][l+3+j]);
+								 tab[h][l+3+j]= (int) Math.round(tabOrigine[h][l-3+j]*0.75+0.25*tabOrigine[h][l+3+j]);
+							 }
+							   for (int nl = l + 9; nl < largeur; nl++)
+								   tab[h][nl - 3] = tabOrigine[h][nl];
+						   }else{
+						   for (int nl = l + 3; nl < largeur; nl++)
+							   tab[h][nl - 3] = tabOrigine[h][nl];
+						   }
+					   } else {
+						   if(addligne){
+							   tab[h][l] = (int) Math.round(tabOrigine[h][l-1]*0.25+0.75*tabOrigine[h][l+1]);
+							   tab[h][l+1] = (int) Math.round(tabOrigine[h][l-1]*0.75+0.25*tabOrigine[h][l+1]);
+							   for (int nl = l + 3; nl < largeur; nl++){
+								   tab[h][nl - 1] = tabOrigine[h][nl];
+							   }
+						   }else{
+							   for (int nl = l + 1; nl < largeur; nl++){
+								   tab[h][nl - 1] = tabOrigine[h][nl];
+							}  
+						   }
+					   }
+					   
+					   fin = true;
+				   } else {
+					   tab[h][l] = tabOrigine[h][l];
+				   }
+				   
+				   l++;
+			   }
+		   }
+		   
+		   tabOrigine = tab;
+		   m.setProgress((i + 1) * 2);
+	   }
+	   
+	   m.setTabFinal(tabOrigine);
+	   
+	   m.setTaskFinished(true);
+	   m.setRunning(false);
+   }
+   
+
    public static int [][] ppmToPgm(int[][] color){
 	   int[][] gris = new int [color.length][color[0].length/3];
 	   
@@ -196,6 +305,7 @@ public class SeamCarving implements Runnable {
 	   
 	   return gris;   
    }
+   
    
    @Override
    public void run(){
@@ -212,6 +322,86 @@ public class SeamCarving implements Runnable {
 		   else
 			   firstPartActivityVertical();
 	   }
+   }
+   
+   
+public static void firstPartActivityAvant(String filesourcename, Modele m){
+	   
+	   boolean formatPPM = filesourcename.endsWith(".ppm");
+	   
+	   int[][] tabOrigine;
+	   
+	   if (formatPPM)
+		   tabOrigine = readppm(filesourcename);
+	   else
+		   tabOrigine = readpgm(filesourcename);
+	   
+	   int[][] tab;
+	   
+	   m.setTaskFinished(false);
+	   
+	   for (int i = 0; i < 50; i++){
+			   
+		   int hauteur = tabOrigine.length;
+		   int largeur = tabOrigine[0].length;
+		   
+		   Graph g;
+		   
+		   if (formatPPM){
+			   int[][] gris = SeamCarving.ppmToPgm(tabOrigine);
+			   g = Graph.tograph(interest(gris));
+			   tab = new int[hauteur][largeur - 3];
+		   } else {
+			   g = Graph.tograph(interest(tabOrigine)); 
+			   tab = new int[hauteur][largeur - 1];
+		   }
+		   
+		   ArrayList<Integer> ali = new ArrayList<>();
+		   
+		   ali = Parcours.dijkstra(g, g.vertices() - 2, g.vertices() - 1);
+		   
+		   for (int h = 0; h < hauteur; h++){ 			//pour chaque ligne
+			   
+			   int l = 0;
+			   
+			   boolean fin = false;
+			   
+			   while (!fin){
+				    
+				   int posAct;
+				   
+				   if (formatPPM)
+					   posAct = (largeur/3 * h) + l;
+				   else
+					   posAct = (largeur * h) + l;
+				   
+				   if (ali.contains(posAct)){
+					   
+					   if (formatPPM){
+						   for (int nl = l + 3; nl < largeur; nl++)
+							   tab[h][nl - 3] = tabOrigine[h][nl];
+					   } else {
+						   for (int nl = l + 1; nl < largeur; nl++)
+							   tab[h][nl - 1] = tabOrigine[h][nl];
+					   }
+					   
+					   fin = true;
+				   } else {
+					   tab[h][l] = tabOrigine[h][l];
+				   }
+				   
+				   l++;
+			   }
+		   }
+		   
+		   tabOrigine = tab;
+		   m.setProgress((i + 1) * 2);
+	   }
+	   
+	   m.setTabFinal(tabOrigine);
+	   
+	   m.setTaskFinished(true);
+	   m.setRunning(false);
    }
    
    public void firstPartActivityVertical(){
@@ -284,7 +474,7 @@ public class SeamCarving implements Runnable {
 	   m.setRunning(false);
    }
 	   
-public void firstPartActivityHorizontal(){
+   public void firstPartActivityHorizontal(){
 	   
 	   int[][] tab;
 	   
