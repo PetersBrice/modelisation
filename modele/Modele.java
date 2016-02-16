@@ -11,7 +11,7 @@ import modelisation.graphique.ProgressPanneau;
 import modelisation.graphique.RunPanneau;
 import modelisation.traitement.SeamCarving;
 
-public class Modele extends Observable implements Runnable{
+public class Modele extends Observable{
 	
 	private int progression;
 	private int[][] tabFinal;
@@ -21,6 +21,10 @@ public class Modele extends Observable implements Runnable{
 
 	private boolean taskFinished;
 	private boolean fileOriginChoosed;
+	
+	private boolean supprimerLignes;
+	
+	private SeamCarving sc;
 	
 	private String fileOriginAbsPath;
 	private String fileSaveAbsPath;
@@ -37,6 +41,8 @@ public class Modele extends Observable implements Runnable{
 		
 		taskFinished = false;
 		fileOriginChoosed = false;
+		
+		supprimerLignes = false;
 	}
 	
 	public void saveFile(){
@@ -47,29 +53,17 @@ public class Modele extends Observable implements Runnable{
 	}
 	
 	public void partOneActivity(){
-		whichPart = 1;
-		Thread t = new Thread(this, "first");
+		sc = new SeamCarving(false, supprimerLignes, fileOriginAbsPath, this);
+		Thread t = new Thread(sc, "SeamCarving");
 		t.start();
 		setRunning(true);
 	}
 	
 	public void partTwoActivity(){
-		whichPart = 2;
-		Thread t = new Thread(this, "second");
+		sc = new SeamCarving(false, supprimerLignes, fileOriginAbsPath, this);
+		Thread t = new Thread(sc, "SeamCarving");
 		t.start();
 		setRunning(true);
-	}
-	
-	@Override
-	public void run() {
-		switch (whichPart){
-		case 1:
-			SeamCarving.firstPartActivity(fileOriginAbsPath, this);
-			break;
-		case 2:
-			SeamCarving.secondPartActivity(fileOriginAbsPath, this);
-			break;
-		}
 	}
 
 	public String getFileSave() {
@@ -122,6 +116,14 @@ public class Modele extends Observable implements Runnable{
 		this.notifyObservers();
 	}
 	
+	public boolean isSupprimerLignes() {
+		return supprimerLignes;
+	}
+
+	public void setSupprimerLignes(boolean supprimerLignes) {
+		this.supprimerLignes = supprimerLignes;
+	}
+
 	public int getProgress(){
 		return progression;
 	}

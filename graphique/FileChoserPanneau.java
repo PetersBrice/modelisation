@@ -2,11 +2,14 @@ package modelisation.graphique;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.io.File;
 import java.util.Observable;
 import java.util.Observer;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 
@@ -17,6 +20,7 @@ public class FileChoserPanneau extends JPanel implements Observer{
 	private Modele mod;
 	private JFileChooser jfc;
 	private JButton openButton, saveButton;
+	private JCheckBox supprLig;
 	
 	public FileChoserPanneau(Modele m){
 		
@@ -26,8 +30,21 @@ public class FileChoserPanneau extends JPanel implements Observer{
 		
 		jfc = new JFileChooser();
 		
+		supprLig = new JCheckBox("Enlever lignes");
+		
 		openButton = new JButton("Open File...");
 		saveButton = new JButton("Save File...");
+		
+		supprLig.addItemListener(new ItemListener() {
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				if (e.getStateChange() == ItemEvent.DESELECTED){
+					mod.setSupprimerLignes(false);
+				} else if (e.getStateChange() == ItemEvent.SELECTED){
+					mod.setSupprimerLignes(true);
+				}
+			}
+		});
 		
 		openButton.addActionListener(new ActionListener() {
 			
@@ -55,8 +72,12 @@ public class FileChoserPanneau extends JPanel implements Observer{
 			}
 		});
 		
+		supprLig.setSelected(false);
+		
 		saveButton.setEnabled(false);
 		openButton.setEnabled(true);
+		
+		add(supprLig);
 		
 		add(openButton);
 		add(saveButton);

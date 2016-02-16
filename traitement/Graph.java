@@ -103,6 +103,48 @@ public class Graph {
 	   return g;
    }
    
+   static public Graph tographHorizontal(int[][] itr){
+	   int hauteur = itr.length;
+	   int largeur = itr[0].length;
+	   
+	   int tailleG = (largeur * hauteur) + 2;
+	   
+	   Graph g = new Graph(tailleG); //creation d'un graphe de taille (hauteur * largeur) + 2
+	   
+	   /* Le E num tailleG - 2 est le premier E, et le E num tailleG - 1 est le dernier E */
+	   
+	 //initialisation des premiers V de cout 0 partant du premier E vers les E de la premiere colonne de itr
+	   for (int i = 0; i < hauteur; i++){
+		   g.addEdge(new Edge(tailleG - 2, i, 0));
+	   }
+	   
+	   for (int l = 0; l < largeur; l++){
+		   for (int h = 0; h < hauteur; h++){
+		   			   
+			   int posAct = (hauteur * l) + h; //num de E depuis lequel les V partent
+			   /*int coutAct = itr[h][l]; //cout des V
+			   if (h == hauteur - 1){ //cas dernière ligne (Les E n'ont qu'un seul V)
+				   g.addEdge(new Edge(posAct, tailleG - 1, itr[h][l]));
+			   } else {
+				   if (l == 0){						//cas premiere colonne (Les E n'ont que 2 V)
+					 
+					   g.addEdge(new Edge(posAct, posAct + largeur, coutAct));		//E "juste en dessous"
+					   g.addEdge(new Edge(posAct, posAct + largeur + 1, coutAct));	//E à "droite" du precedent
+				   } else if (l == largeur - 1){ 	//cas derniere colonne (Les E n'ont que 2 V)
+					   g.addEdge(new Edge(posAct, posAct + largeur, coutAct));		//E "juste en dessous"
+					   g.addEdge(new Edge(posAct, posAct + largeur - 1, coutAct));	//E à "gauche" du premier
+				   } else {							//les E ont 3 V
+					   g.addEdge(new Edge(posAct, posAct + largeur, coutAct));		//E "juste en dessous"
+					   g.addEdge(new Edge(posAct, posAct + largeur + 1, coutAct));	//E à "droite" du precedent
+					   g.addEdge(new Edge(posAct, posAct + largeur - 1, coutAct));	//E à "gauche" du premier
+				   }
+			   }*/
+		   }
+	   }
+	   
+	   return null;
+   }
+   
    static public Graph tograph2(int[][] itr){
 	   int hauteur = itr.length;
 	   int largeur = itr[0].length;

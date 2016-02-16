@@ -13,11 +13,36 @@ import java.util.Scanner;
 
 import modelisation.modele.Modele;
 
-public class SeamCarving {
+public class SeamCarving implements Runnable {
 
-   public static int[][] readpgm(String fn)
-	 {		
-        try {
+	private boolean partTwo;
+	private boolean horizontal;
+	
+	private boolean isPPM;
+	
+	private int[][] tabOrigine;
+	
+	private Modele m;
+	
+	
+	public SeamCarving(boolean isTwo, boolean isHoriz, String fileSourceName, Modele mod){
+		
+		partTwo = isTwo;
+		horizontal = isHoriz;
+
+		m = mod;
+		
+		isPPM = fileSourceName.endsWith(".ppm");
+		   
+		if (isPPM)
+			tabOrigine = readppm(fileSourceName);
+		else
+			tabOrigine = readpgm(fileSourceName);
+	}
+	
+	public static int[][] readpgm(String fn){		
+        
+		try {
         	FileInputStream fis = new FileInputStream(fn);
             BufferedReader d = new BufferedReader(new InputStreamReader(fis));
             String magic = d.readLine();
@@ -46,10 +71,10 @@ public class SeamCarving {
             t.printStackTrace(System.err) ;
             return null;
         }
-    }
+	}
    
-   public static int[][] readppm(String fn)
-	 {		
+	public static int[][] readppm(String fn){
+		
       try {
       	FileInputStream fis = new FileInputStream(fn);
           BufferedReader d = new BufferedReader(new InputStreamReader(fis));
@@ -79,11 +104,12 @@ public class SeamCarving {
           t.printStackTrace(System.err) ;
           return null;
       }
-  }
+	}
    
+	
    
-   
-   public static void writepgm(int[][] image, String filename){
+	public static void writepgm(int[][] image, String filename){
+		
 	  try{
 		  File f = new File(filename);
 		  FileWriter fw = new FileWriter(f);
@@ -158,16 +184,37 @@ public class SeamCarving {
 	   return interest;
    }
    
-   public static void firstPartActivity(String filesourcename, Modele m){
+   public static int [][] ppmToPgm(int[][] color){
+	   int[][] gris = new int [color.length][color[0].length/3];
 	   
-	   boolean formatPPM = filesourcename.endsWith(".ppm");
+	   for(int i = 0; i < gris.length;i++){
+		   for(int j = 0; j < gris[0].length;j++){
+			   //gris[i][j] = (int) (0.2126 * (float)color[i][j] + 0.7152 * (float)color[i][j+1] + 0.0722 * (float)color[i][j+2]);
+			   gris[i][j] = (int) ((color[i][j] + color[i][j+1] + color[i][j+2]) / 3);
+		   }
+	   }
 	   
-	   int[][] tabOrigine;
-	   
-	   if (formatPPM)
-		   tabOrigine = readppm(filesourcename);
-	   else
-		   tabOrigine = readpgm(filesourcename);
+	   return gris;   
+   }
+   
+   @Override
+   public void run(){
+	   System.out.println("lllll");
+	   if (partTwo){
+		   if (horizontal)
+			   ;
+		   else
+			   ;
+	   } else {
+		   System.out.println("jj");
+		   if (horizontal)
+			   ;
+		   else
+			   firstPartActivityVertical();
+	   }
+   }
+   
+   public void firstPartActivityVertical(){
 	   
 	   int[][] tab;
 	   
@@ -180,7 +227,7 @@ public class SeamCarving {
 		   
 		   Graph g;
 		   
-		   if (formatPPM){
+		   if (isPPM){
 			   int[][] gris = SeamCarving.ppmToPgm(tabOrigine);
 			   g = Graph.tograph(interest(gris));
 			   tab = new int[hauteur][largeur - 3];
@@ -203,14 +250,14 @@ public class SeamCarving {
 				    
 				   int posAct;
 				   
-				   if (formatPPM)
+				   if (isPPM)
 					   posAct = (largeur/3 * h) + l;
 				   else
 					   posAct = (largeur * h) + l;
 				   
 				   if (ali.contains(posAct)){
 					   
-					   if (formatPPM){
+					   if (isPPM){
 						   for (int nl = l + 3; nl < largeur; nl++)
 							   tab[h][nl - 3] = tabOrigine[h][nl];
 					   } else {
@@ -237,20 +284,105 @@ public class SeamCarving {
 	   m.setRunning(false);
    }
 	   
-   public static int [][] ppmToPgm(int[][] color){
-	   int[][] gris = new int [color.length][color[0].length/3];
-	   for(int i = 0; i < gris.length;i++){
-		   for(int j = 0; j < gris[0].length;j++){
-			   //gris[i][j] = (int) (0.2126 * (float)color[i][j] + 0.7152 * (float)color[i][j+1] + 0.0722 * (float)color[i][j+2]);
-			   gris[i][j] = (int) ((color[i][j] + color[i][j+1] + color[i][j+2]) / 3);
+public void firstPartActivityHorizontal(){
+	   
+	   int[][] tab;
+	   
+	   m.setTaskFinished(false);
+	   
+	   for (int i = 0; i < 50; i++){
+			   
+		   int hauteur = tabOrigine.length;
+		   int largeur = tabOrigine[0].length;
+		   
+		   Graph g;
+		   
+		   // a voir a partir de là
+		   if (isPPM){
+			   int[][] gris = SeamCarving.ppmToPgm(tabOrigine);
+			   g = Graph.tograph(interest(gris));
+			   tab = new int[hauteur][largeur - 3];
+		   } else {
+			   g = Graph.tograph(interest(tabOrigine)); 
+			   tab = new int[hauteur][largeur - 1];
 		   }
+		   
+		   ArrayList<Integer> ali = new ArrayList<>();
+		   
+		   ali = Parcours.dijkstra(g, g.vertices() - 2, g.vertices() - 1);
+		   
+		   //a changer pour les lignes
+		   for (int h = 0; h < hauteur; h++){ 			//pour chaque ligne
+			   
+			   int l = 0;
+			   
+			   boolean fin = false;
+			   
+			   while (!fin){
+				    
+				   int posAct;
+				   
+				   if (isPPM)
+					   posAct = (largeur/3 * h) + l;
+				   else
+					   posAct = (largeur * h) + l;
+				   
+				   if (ali.contains(posAct)){
+					   
+					   if (isPPM){
+						   for (int nl = l + 3; nl < largeur; nl++)
+							   tab[h][nl - 3] = tabOrigine[h][nl];
+					   } else {
+						   for (int nl = l + 1; nl < largeur; nl++)
+							   tab[h][nl - 1] = tabOrigine[h][nl];
+					   }
+					   
+					   fin = true;
+				   } else {
+					   tab[h][l] = tabOrigine[h][l];
+				   }
+				   
+				   l++;
+			   }
+		   }
+		   
+		   tabOrigine = tab;
+		   m.setProgress((i + 1) * 2);
 	   }
-	return gris;
+	   
+	   m.setTabFinal(tabOrigine);
+	   
+	   m.setTaskFinished(true);
+	   m.setRunning(false);
+   }
+   
+  
+   public void secondPartActivityVertical(){
+	   
+	   int[][] tab;
+	   
+	   
+	   m.setTaskFinished(false);
+	   
+	   for (int i = 0; i < 50; i++){
+		   
+		   //a finir
+		   
+		   /*
+		   tab = SeamCarving.readpgm("src/test.pgm");
+		   interest = SeamCarving.interest(tab);
+		   Graph testGraph = Graph.tograph2(interest);
+		   testGraph.writeFile("test2.txt");
+		   Parcours.twograph(testGraph, testGraph.vertices() - 2, testGraph.vertices() - 1);*/
+	   
+	   }
 	   
    }
-   public static void secondPartActivity(String filesourcename, Modele m){
+   
+   public void secondPartActivityHorizontal(){
 	   
    }
+   
 }
 
    

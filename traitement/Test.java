@@ -102,7 +102,7 @@ class Test {
 	   //SeamCarving.mainActivity("modelisation/ex1.pgm", "wsh.pgm");
 
 
-		/*JFrame jf = new JFrame("Projet Modelisation Peters-Debicki");
+	   JFrame jf = new JFrame("Projet Modelisation Peters-Debicki");
 		
 		Modele m = new Modele();
 		
@@ -114,16 +114,11 @@ class Test {
 		jf.setVisible(true);
 		jf.setLocationRelativeTo(null);
 		jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	   */
+	   
 		
-	   int[][] tab;
-	   int[][] interest;
-	   tab = SeamCarving.readpgm("test.pgm");
-	   StringBuilder sb = new StringBuilder();
-	   StringBuilder si = new StringBuilder();
-	   interest = SeamCarving.interest(tab);
-	   Graph testGraph = Graph.tograph2(interest);
-	   testGraph.writeFile("test2.dot");
+	  
+	   
+	   
 	   /*for(int i =0; i < gris.length;i++){
 		   for(int j = 0;j<gris[i].length;j++){
 			   sb.append(""+gris[i][j]+" ");

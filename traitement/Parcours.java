@@ -93,13 +93,28 @@ public class Parcours {
 		//recherche du premier chemin
 		chemin = dijkstra(g,s,t);
 		
+		System.out.println(chemin);
+		
 		//inversion des arretes
-		for(int i =0; i < chemin.size()-1;i++){
-			g.addEdge(new Edge(chemin.get(i),chemin.get(i+1),0));
+		for(int i = chemin.size() - 1; i >= 0; i--){
+			int indic = chemin.get(i);
+			if (indic != s && indic != t){
+				for (Edge e : g.adj(indic)){
+					if (chemin.contains((Integer) e.from)){
+						int tmp = e.from;
+						e.from = e.to;
+						e.to = tmp;
+					}
+				}
+			}
 		}
+		
+		g.writeFile("test.txt");
 		
 		//recherche du deuxieme chemin
 		chemin2 = dijkstra(g,s,t);
+		
+		System.out.println(chemin2);
 		
 		for(int i = 0; i < chemin2.size();i++){
 			chemin.add(chemin2.get(i));
