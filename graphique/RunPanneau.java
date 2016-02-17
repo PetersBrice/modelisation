@@ -50,6 +50,7 @@ public class RunPanneau extends JPanel implements Observer {
 	public void update(Observable o, Object arg) {
 		if (mod.isFileOriginChoosed()){
 			part1.setEnabled(true);
+			part2.setEnabled(true);
 		}
 
 	}

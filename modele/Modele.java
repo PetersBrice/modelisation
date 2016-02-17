@@ -60,7 +60,7 @@ public class Modele extends Observable{
 	}
 	
 	public void partTwoActivity(){
-		sc = new SeamCarving(false, supprimerLignes, fileOriginAbsPath, this);
+		sc = new SeamCarving(true, supprimerLignes, fileOriginAbsPath, this);
 		Thread t = new Thread(sc, "SeamCarving");
 		t.start();
 		setRunning(true);

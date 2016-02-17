@@ -114,10 +114,42 @@ class Test {
 		jf.setVisible(true);
 		jf.setLocationRelativeTo(null);
 		jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
 	   
-		
+	   int[][] tab;
+	   int[][] interest;
+	   tab = SeamCarving.readpgm("lol.pgm");
+	   interest = SeamCarving.interest(tab);
 	  
+	   StringBuilder sb = new StringBuilder();
+	   for(int i =0; i < tab.length;i++){
+		   for(int j = 0;j<tab[i].length;j++){
+			   sb.append(""+tab[i][j]+" ");
+		   }   
+		   sb.append("\n");
+	   }
 	   
+	   System.out.println(sb.toString());
+	   
+	   StringBuilder sbl = new StringBuilder();
+	   for(int i =0; i < interest.length;i++){
+		   for(int j = 0;j<interest[i].length;j++){
+			   sbl.append(""+interest[i][j]+" ");
+		   }   
+		   sbl.append("\n");
+	   }
+	   
+	   System.out.println(sbl.toString());
+	   
+	   Graph g = Graph.tograph2(interest);
+	   
+	   g.writeFile("jjjjeeej.dot");
+	   
+	   ArrayList<Integer> ali = new ArrayList<>();
+	   
+	   ali = Parcours.dijkstra(g, g.vertices() - 2, g.vertices() - 1);
+	   
+	   System.out.println(ali);
 	   
 	   /*for(int i =0; i < gris.length;i++){
 		   for(int j = 0;j<gris[i].length;j++){

@@ -183,6 +183,44 @@ public class SeamCarving implements Runnable {
 	   return interest;
    }
    
+   public static int[][] interestHorizontal(int[][] image){
+	   int moyenne;
+	   int interestVal;
+	   int length = image.length;
+	   int width = image[0].length;
+	   int[][] interest = new int[length][width];
+	   
+	   //on remplie le tableau
+	   for(int i = 0; i < length;i++){
+		   for(int j = 0; j < width;j++){
+			   //si on est en fin de colonne
+			   if(i == length-1){
+				  interestVal = Math.abs(image[i][j]-image[i-1][j]);
+			   }else{
+				   //si on est en debut de colonne
+				   if(i==0){
+					   interestVal = Math.abs(image[i][j]-image[i+1][j]);
+				   }else{
+					   moyenne = (image[i-1][j]+image[i+1][j])/2;
+					   interestVal = Math.abs(image[i][j]-moyenne);
+				   }
+			   }
+			   
+			   interest[i][j] = interestVal;
+		   }
+	   }
+	   
+	   int[][] interestSwap = new int [width][length];
+	   
+	   for(int i = 0; i < length;i++){
+		   for(int j = 0; j < width;j++){
+			   interestSwap[j][length - 1 - i] = interest[i][j];
+		   }
+	   } 
+	   
+	   return interestSwap;
+   }
+   
 public static void voilaPourquoiJeVoulaisRefaireSeamCarvingEtQueTuFassePlusRien(String filesourcename, Modele m){
 	   
 	   boolean formatPPM = filesourcename.endsWith(".ppm");
@@ -314,11 +352,11 @@ public static void voilaPourquoiJeVoulaisRefaireSeamCarvingEtQueTuFassePlusRien(
 		   if (horizontal)
 			   ;
 		   else
-			   ;
+			   secondPartActivityVertical();
 	   } else {
 		   System.out.println("jj");
 		   if (horizontal)
-			   ;
+			   firstPartActivityHorizontal();
 		   else
 			   firstPartActivityVertical();
 	   }
@@ -487,24 +525,24 @@ public static void firstPartActivityAvant(String filesourcename, Modele m){
 		   
 		   Graph g;
 		   
-		   // a voir a partir de là
 		   if (isPPM){
 			   int[][] gris = SeamCarving.ppmToPgm(tabOrigine);
-			   g = Graph.tograph(interest(gris));
-			   tab = new int[hauteur][largeur - 3];
+			   g = Graph.tograph(interestHorizontal(gris));
+			   tab = new int[hauteur - 3][largeur];
 		   } else {
-			   g = Graph.tograph(interest(tabOrigine)); 
-			   tab = new int[hauteur][largeur - 1];
+			   g = Graph.tograph(interestHorizontal(tabOrigine)); 
+			   tab = new int[hauteur - 1][largeur];
 		   }
 		   
 		   ArrayList<Integer> ali = new ArrayList<>();
 		   
 		   ali = Parcours.dijkstra(g, g.vertices() - 2, g.vertices() - 1);
 		   
-		   //a changer pour les lignes
-		   for (int h = 0; h < hauteur; h++){ 			//pour chaque ligne
+		   System.out.println(ali);
+		   
+		   for (int l = 0; l < largeur; l++){ 			//pour chaque colonne
 			   
-			   int l = 0;
+			   int h = 0;
 			   
 			   boolean fin = false;
 			   
@@ -513,26 +551,30 @@ public static void firstPartActivityAvant(String filesourcename, Modele m){
 				   int posAct;
 				   
 				   if (isPPM)
-					   posAct = (largeur/3 * h) + l;
+					   posAct = (hauteur/3 * l) + (hauteur/3 - h);
 				   else
-					   posAct = (largeur * h) + l;
+					   posAct = (hauteur * l) + (hauteur - h);
+				   
 				   
 				   if (ali.contains(posAct)){
 					   
 					   if (isPPM){
-						   for (int nl = l + 3; nl < largeur; nl++)
-							   tab[h][nl - 3] = tabOrigine[h][nl];
+						   for (int nh = h; nh < hauteur; nh++)
+							   tab[nh][l] = tabOrigine[nh + 3][l];
 					   } else {
-						   for (int nl = l + 1; nl < largeur; nl++)
-							   tab[h][nl - 1] = tabOrigine[h][nl];
+						   for (int nh = h; nh < hauteur - 1; nh++){
+							   tab[nh][l] = tabOrigine[nh + 1][l];
+							   
+						   }
 					   }
 					   
 					   fin = true;
 				   } else {
-					   tab[h][l] = tabOrigine[h][l];
+					   if (h < hauteur - 1)
+						   tab[h][l] = tabOrigine[h][l];
 				   }
 				   
-				   l++;
+				   h++;
 			   }
 		   }
 		   
@@ -554,18 +596,120 @@ public static void firstPartActivityAvant(String filesourcename, Modele m){
 	   
 	   m.setTaskFinished(false);
 	   
-	   for (int i = 0; i < 50; i++){
+	   for (int i = 0; i < 25; i++){
 		   
-		   //a finir
+		   int hauteur = tabOrigine.length;
+		   int largeur = tabOrigine[0].length;
 		   
-		   /*
-		   tab = SeamCarving.readpgm("src/test.pgm");
-		   interest = SeamCarving.interest(tab);
-		   Graph testGraph = Graph.tograph2(interest);
-		   testGraph.writeFile("test2.txt");
-		   Parcours.twograph(testGraph, testGraph.vertices() - 2, testGraph.vertices() - 1);*/
-	   
+		   Graph g;
+		   
+		   if (isPPM){
+			   int[][] gris = SeamCarving.ppmToPgm(tabOrigine);
+			   g = Graph.tograph2(interest(gris));
+			   tab = new int[hauteur][largeur - 6];
+		   } else {
+			   g = Graph.tograph2(interest(tabOrigine)); 
+			   tab = new int[hauteur][largeur - 2];
+		   }
+		   
+		   
+		   
+		   ArrayList<Integer> ali = new ArrayList<>();
+		   
+		   ali = Parcours.twograph(g, g.vertices() - 2, g.vertices() - 1);
+		   
+		   for (int h = 0; h < hauteur; h++){ 			//pour chaque ligne
+			   
+			   int l = 0;
+			   
+			   boolean fin = false;
+			   
+			   while (!fin){
+				    
+				   int posAct;
+				   
+				   if (isPPM){
+					   if (!(h == hauteur - 1)){ //si ce n'est pas la derniere ligne
+						   posAct = ((largeur/3) * ((h*2) - 1)) + l;
+					   } else {
+						   posAct = (g.vertices() - 3) - (largeur/3 - l);
+					   }
+				   } else {
+					   if (!(h == hauteur - 1)){ //si ce n'est pas la derniere ligne
+						   posAct = (largeur * ((h*2) - 1)) + l;
+					   } else {
+						   posAct = (g.vertices() - 3) - (largeur - l);
+					   }
+				   }
+				   
+				   if (ali.contains(posAct)){
+					   
+					   if (isPPM){
+						   for (int nl = l; nl < largeur - 3; nl++){
+							   
+							   boolean nfin = false;
+							   
+							   while (!nfin){
+							   
+								   if (!(h == hauteur - 1)){ //si ce n'est pas la derniere ligne
+									   posAct = ((largeur/3) * ((h*2) - 1)) + l;
+								   } else {
+									   posAct = (g.vertices() - 3) - (largeur/3 - l);
+								   }
+								   
+								   if (ali.contains(posAct)){
+									   for (int nnl = nl; nnl < largeur - 6; nnl++)
+										   tab[h][nnl] = tabOrigine[h][nnl + 6];
+								   } else {
+									   tab[h][nl] = tabOrigine[h][nl + 3];
+								   }
+								   
+								   nfin = true;
+							   }
+						   }
+					   } else {
+						   for (int nl = l; nl < largeur - 1; nl++){
+
+							   boolean nfin = false;
+							   
+							   while (!nfin){
+							   
+								   if (!(h == hauteur - 1)){ //si ce n'est pas la derniere ligne
+									   posAct = ((largeur) * ((h*2) - 1)) + l;
+								   } else {
+									   posAct = (g.vertices() - 3) - (largeur - l);
+								   }
+								   
+								   if (ali.contains(posAct)){
+									   for (int nnl = nl + 1; nnl < largeur - 2; nnl++)
+										   tab[h][nnl] = tabOrigine[h][nnl + 2];
+								   } else {
+									   tab[h][nl] = tabOrigine[h][nl + 1];
+								   }
+								   
+								   nfin = true;
+							   }
+						   }
+					   }
+					   
+					   fin = true;
+				   } else {
+					   if (l < largeur - 2)
+						   tab[h][l] = tabOrigine[h][l];
+				   }
+				   
+				   l++;
+			   }
+		   }
+		   
+		   tabOrigine = tab;
+		   m.setProgress((i + 1) * 4);
 	   }
+	   
+	   m.setTabFinal(tabOrigine);
+	   
+	   m.setTaskFinished(true);
+	   m.setRunning(false);
 	   
    }
    
