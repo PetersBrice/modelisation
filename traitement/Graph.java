@@ -185,7 +185,7 @@ public class Graph {
 	   //creation des V partant des (hauteur) lignes de itr
 	   for (h = 1; h < hauteur-1; h++){
 		   for (l = 0; l < largeur; l++){ 
-			   posAct = (largeur * (h-1)*2) +l+4; //num de E depuis lequel les V partent
+			   posAct = (largeur * (h-1)*2) +l+largeur; //num de E depuis lequel les V partent
 			   coutAct = itr[h][l]; //cout des V
 			   // on ajoute l'arrete qui descend directement a 0
 			   g.addEdge(new Edge(posAct,posAct+largeur,0));

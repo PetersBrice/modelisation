@@ -44,7 +44,8 @@ public class Parcours {
 		
 		while (som != s){
 			som = parent[som];
-			ali.add(som);
+			if(!ali.contains(som))
+				ali.add(som);
 		}
 		
 		return ali;

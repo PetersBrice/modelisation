@@ -596,7 +596,7 @@ public static void firstPartActivityAvant(String filesourcename, Modele m){
 	   
 	   m.setTaskFinished(false);
 	   
-	   for (int i = 0; i < 25; i++){
+	   for (int i = 0; i < 1; i++){
 		   
 		   int hauteur = tabOrigine.length;
 		   int largeur = tabOrigine[0].length;
@@ -612,7 +612,7 @@ public static void firstPartActivityAvant(String filesourcename, Modele m){
 			   tab = new int[hauteur][largeur - 2];
 		   }
 		   
-		   
+		   g.writeFile("lol.dot");
 		   
 		   ArrayList<Integer> ali = new ArrayList<>();
 		   
@@ -681,7 +681,7 @@ public static void firstPartActivityAvant(String filesourcename, Modele m){
 								   }
 								   
 								   if (ali.contains(posAct)){
-									   for (int nnl = nl + 1; nnl < largeur - 2; nnl++)
+									   for (int nnl = nl ; nnl < largeur - 2; nnl++)
 										   tab[h][nnl] = tabOrigine[h][nnl + 2];
 								   } else {
 									   tab[h][nl] = tabOrigine[h][nl + 1];
